@@ -29,6 +29,16 @@ FuckAIGC/
 └── README.md       # 项目说明
 ```
 
+## 效果展示
+
+### 第一次提交
+![alt text](image-1.png)
+### 第二提交
+![alt text](image-2.png)
+### 第三次提交
+![alt text](image-3.png)
+
+
 ## 环境要求
 
 只需要 Python 3.10+。
