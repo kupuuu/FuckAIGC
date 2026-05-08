@@ -33,6 +33,9 @@ FuckAIGC/
 ### 端口打开界面
 ![alt text](image.png)
 
+### 文本增强前后修改对比
+![alt text](image-4.png)
+
 ## 效果展示
 ### 第一次提交
 ![alt text](image-1.png)
