@@ -33,19 +33,20 @@ FuckAIGC/
 ### 端口打开界面
 ![alt text](image.png)
 
-### 文本增强前后修改对比
+### 文本增强过程
 ![alt text](image-4.png)
 
 ## 效果展示
+由本人论文提交三次结果展示
+
 ### 第一次提交
 ![alt text](image-1.png)
+
 ### 第二提交
 ![alt text](image-2.png)
+
 ### 第三次提交
 ![alt text](image-3.png)
-
-
-
 
 ## 环境要求
 
