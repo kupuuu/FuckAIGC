@@ -392,7 +392,15 @@ HTML = r"""<!doctype html>
     .workspace { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
     .pane { background:var(--panel); border:1px solid var(--line); border-radius:8px; overflow:hidden; min-height:420px; display:flex; flex-direction:column; }
     .pane-title { display:flex; justify-content:space-between; align-items:center; padding:10px 12px; border-bottom:1px solid var(--line); font-weight:650; }
+    .pane-actions { display:flex; align-items:center; gap:10px; }
     .counter { color:var(--muted); font-size:12px; font-weight:500; }
+    .copy-btn { min-width:0; width:30px; height:30px; padding:0; border:1px solid var(--line); border-radius:7px; background:#fff; color:#344054; display:inline-flex; align-items:center; justify-content:center; position:relative; }
+    .copy-btn:hover { background:#f8fafc; border-color:#b8c0cc; }
+    .copy-btn:disabled { opacity:.45; cursor:not-allowed; }
+    .copy-icon { width:15px; height:15px; position:relative; display:inline-block; }
+    .copy-icon::before, .copy-icon::after { content:""; position:absolute; width:10px; height:10px; border:1.8px solid currentColor; border-radius:2px; background:#fff; }
+    .copy-icon::before { left:1px; top:4px; opacity:.72; }
+    .copy-icon::after { left:5px; top:0; }
     textarea.editor { border:0; border-radius:0; resize:vertical; min-height:420px; flex:1; padding:14px; line-height:1.7; }
     #output { white-space:pre-wrap; padding:14px; min-height:420px; line-height:1.7; overflow:auto; }
     .status { min-height:24px; margin:12px 2px; color:var(--muted); }
@@ -442,7 +450,7 @@ HTML = r"""<!doctype html>
     </section>
     <section class="workspace">
       <div class="pane"><div class="pane-title">原文 <span class="counter" id="inputCount">0 字</span></div><textarea id="input" class="editor" placeholder="把要处理的文本粘贴到这里..."></textarea></div>
-      <div class="pane"><div class="pane-title">重写结果 <span class="counter" id="outputCount">0 字</span></div><div id="output"></div></div>
+      <div class="pane"><div class="pane-title">重写结果 <div class="pane-actions"><span class="counter" id="outputCount">0 字</span><button id="copyOutputBtn" class="copy-btn" title="复制重写结果" aria-label="复制重写结果"><span class="copy-icon"></span></button></div></div><div id="output"></div></div>
     </section>
     <div id="status" class="status"></div>
     <section class="diff" id="diffBox" hidden>
@@ -590,6 +598,38 @@ HTML = r"""<!doctype html>
       $("processLog").appendChild(line);
       $("processLog").scrollTop = $("processLog").scrollHeight;
     }
+    async function copyText(text) {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(text);
+        return;
+      }
+      const textarea = document.createElement("textarea");
+      textarea.value = text;
+      textarea.setAttribute("readonly", "");
+      textarea.style.position = "fixed";
+      textarea.style.left = "-9999px";
+      document.body.appendChild(textarea);
+      textarea.select();
+      const ok = document.execCommand("copy");
+      document.body.removeChild(textarea);
+      if (!ok) throw new Error("浏览器拒绝复制");
+    }
+    $("copyOutputBtn").addEventListener("click", async () => {
+      const text = $("output").textContent || "";
+      if (!text.trim()) {
+        setStatus("没有可复制的重写结果。", "error");
+        return;
+      }
+      $("copyOutputBtn").disabled = true;
+      try {
+        await copyText(text);
+        setStatus("重写结果已复制到剪贴板。", "ok");
+      } catch (error) {
+        setStatus(error.message || "复制失败，请手动选择文本复制。", "error");
+      } finally {
+        $("copyOutputBtn").disabled = false;
+      }
+    });
     $("testBtn").addEventListener("click", async () => {
       $("testBtn").disabled = true;
       setStatus("正在测试 API 连接...");

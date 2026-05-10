@@ -41,6 +41,7 @@
 FuckAIGC/
 ├── app.py       # 本地网页和 API 服务入口
 ├── prompt.py    # 风格拟态专家提示词
+├── setup.sh     # 一键配置脚本
 ├── .env.example # 环境变量示例
 ├── .gitignore   # Git 忽略规则
 └── README.md    # 项目说明
@@ -52,6 +53,31 @@ FuckAIGC/
 - 无需安装额外依赖
 
 ## 快速开始
+
+### 一键配置
+
+从 Git 拉取项目后，可以直接运行配置脚本：
+
+```bash
+cd /home/myuser/projects/FuckAIGC
+./setup.sh
+```
+
+脚本会完成这些工作：
+
+- 检查 Python 3.10+ 是否可用
+- 交互式填写模型、API Key、Base URL 和本地端口
+- 生成本地 `.env` 配置文件，并设置为仅当前用户可读写
+- 如果 `.env` 已存在，会先询问是否覆盖
+- 可选择配置完成后立即启动本地服务
+
+如果只想手动启动服务，可以在配置完成后运行：
+
+```bash
+python app.py
+```
+
+### 手动启动
 
 1. 进入项目目录：
 
